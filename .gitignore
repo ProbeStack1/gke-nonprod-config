@@ -1,0 +1,17 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.crash.log
+.terraform.lock.hcl
+
+# Secrets
+*.env
+*.pem
+*.key
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
