@@ -1,4 +1,4 @@
-resource "kubernetes_service" "react_vite" {
+resource "kubernetes_service_v1" "react_vite" {
   metadata {
     name      = "react-vite"
     namespace = "dev"
@@ -17,6 +17,6 @@ resource "kubernetes_service" "react_vite" {
       target_port = 80
     }
 
-    type = "ClusterIP"
+    type = "NodePort"
   }
 }

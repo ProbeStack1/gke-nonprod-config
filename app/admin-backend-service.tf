@@ -3,9 +3,14 @@ resource "kubernetes_service_v1" "admin_backend" {
     name      = "admin-backend"
     namespace = "dev"
 
-    # ✅ REQUIRED for GCE Ingress health checks
     annotations = {
-      "cloud.google.com/backend-config" = "{\"default\":\"admin-backend-config\"}"
+      # CRITICAL: Enable Container-Native Load Balancing (NEG)
+      # This allows the Load Balancer to talk directly to Pod IP:8080
+      "cloud.google.com/neg" = "{\"ingress\": true}"
+
+      "cloud.google.com/backend-config" = jsonencode({
+        default = "admin-backend-config"
+      })
     }
   }
 

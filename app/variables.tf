@@ -8,11 +8,35 @@ variable "react_admin_image" {
 }
 variable "admin_backend_image" {
   type    = string
-  default = "us-central1-docker.pkg.dev/methodical-mark-482504-j3/probestack-nonprod-apps/admin-backend:1.0"
+  default = "us-central1-docker.pkg.dev/methodical-mark-482504-j3/probestack-nonprod-apps/admin-backend:3.0"
 }
 variable "apigee_cutover_image" {
   type    = string
   default = "us-central1-docker.pkg.dev/methodical-mark-482504-j3/probestack-nonprod-apps/cutover:1.0"
+}
+variable "apigee_edge_mock_service_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/methodical-mark-482504-j3/probestack-nonprod-apps/apigee-edge-mock-service:1.0"
+}
+variable "probestack_apigee_assessment_service_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/methodical-mark-482504-j3/probestack-nonprod-apps/probestack-apigee-assessment-service:1.0"
+}
+variable "probestack_apigee_deployment_service_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/methodical-mark-482504-j3/probestack-nonprod-apps/probestack-apigee-deployments-service:1.0"
+}
+variable "probestack_apigee_discovery_service_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/methodical-mark-482504-j3/probestack-nonprod-apps/probestack-apigee-discovery-service:1.0"
+}
+variable "probestack_apigee_migration_service_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/methodical-mark-482504-j3/probestack-nonprod-apps/probestack-apigee-migration-service:1.0"
+}
+variable "probestack_profile_config_service_image" {
+  type    = string
+  default = "us-central1-docker.pkg.dev/methodical-mark-482504-j3/probestack-nonprod-apps/probestack-profile-config-service:1.0"
 }
 variable "project_id" {
   description = "GCP project ID"

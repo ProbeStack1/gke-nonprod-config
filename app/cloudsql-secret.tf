@@ -1,4 +1,4 @@
-resource "kubernetes_secret" "cloudsql_db_secret" {
+resource "kubernetes_secret_v1" "cloudsql_db_secret" {
   metadata {
     name      = "cloudsql-db-secret"
     namespace = "dev"

@@ -35,7 +35,21 @@ resource "kubernetes_deployment_v1" "admin_backend" {
             container_port = 8080
           }
 
-          # ✅ Readiness probe for GCE + Kubernetes
+          # -------------------------------------------------
+          # ECO-MODE: Low Resource Requests (Saves Cost)
+          # -------------------------------------------------
+          resources {
+            requests = {
+              cpu    = "50m"    # Low reservation
+              memory = "128Mi"
+            }
+            limits = {
+              cpu    = "500m"
+              memory = "512Mi"
+            }
+          }
+
+          # Readiness probe (Internal container check)
           readiness_probe {
             http_get {
               path = "/api"
@@ -45,6 +59,13 @@ resource "kubernetes_deployment_v1" "admin_backend" {
             period_seconds        = 5
           }
 
+          # -------------------------------------------------
+          # ENVIRONMENT VARIABLES (Restored from your old file)
+          # -------------------------------------------------
+          env {
+            name  = "ROOT_PATH"
+            value = "/admin-backend"
+          }
           env {
             name  = "DB_HOST"
             value = "127.0.0.1"
@@ -115,6 +136,14 @@ resource "kubernetes_deployment_v1" "admin_backend" {
 
           security_context {
             run_as_non_root = true
+          }
+
+          # Eco-mode for sidecar as well
+          resources {
+            requests = {
+              cpu    = "10m"
+              memory = "64Mi"
+            }
           }
         }
       }

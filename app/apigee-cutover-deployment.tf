@@ -71,11 +71,13 @@ resource "kubernetes_deployment_v1" "apigee_cutover" {
           # -------------------------------------------------
           resources {
             requests = {
-              cpu    = "250m"
-              memory = "512Mi"
+              # Low reservation to trick Kubernetes into packing pods tight
+              cpu    = "50m"   
+              memory = "300Mi" 
             }
             limits = {
-              cpu    = "1"
+              # Allow bursting high during startup so Java doesn't crash
+              cpu    = "1000m" 
               memory = "1Gi"
             }
           }

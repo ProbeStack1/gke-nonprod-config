@@ -1,4 +1,4 @@
-resource "kubernetes_secret" "mongodb" {
+resource "kubernetes_secret_v1" "mongodb" {
   metadata {
     name      = "mongodb-secret"
     namespace = "dev"

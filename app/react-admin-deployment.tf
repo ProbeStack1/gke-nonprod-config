@@ -27,21 +27,23 @@ resource "kubernetes_deployment_v1" "react_admin" {
         container {
           name  = "react-admin"
           image = var.react_admin_image
-
           image_pull_policy = "Always"
 
           port {
             container_port = 80
           }
 
+          # -------------------------------------------------
+          # ECO-MODE: Very low reservation for Nginx
+          # -------------------------------------------------
           resources {
-            limits = {
-              cpu    = "500m"
-              memory = "512Mi"
-            }
             requests = {
-              cpu    = "100m"
-              memory = "128Mi"
+              cpu    = "10m"    # barely any CPU reserved
+              memory = "64Mi"   # minimal RAM reserved
+            }
+            limits = {
+              cpu    = "200m"
+              memory = "256Mi"
             }
           }
 
