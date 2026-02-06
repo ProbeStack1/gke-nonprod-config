@@ -8,7 +8,7 @@ variable "react_admin_image" {
 }
 variable "admin_backend_image" {
   type    = string
-  default = "us-central1-docker.pkg.dev/methodical-mark-482504-j3/probestack-nonprod-apps/admin-backend:3.0"
+  default = "us-central1-docker.pkg.dev/methodical-mark-482504-j3/probestack-nonprod-apps/admin-backend:5.0"
 }
 variable "apigee_cutover_image" {
   type    = string

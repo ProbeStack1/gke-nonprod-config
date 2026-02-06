@@ -1,7 +1,7 @@
 project_id = "methodical-mark-482504-j3"
 
 cloudsql_tier     = "db-custom-2-7680"
-cloudsql_user     = "probestack_np_admin"
+cloudsql_user     = "admin_backend"
 cloudsql_password = "Probe@stack!1"
 dev_domain  = "dev.probestack.io"
 test_domain = "test.probestack.io"

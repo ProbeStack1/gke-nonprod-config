@@ -24,9 +24,18 @@ resource "kubernetes_deployment_v1" "admin_backend" {
       }
 
       spec {
-        # -------------------------
-        # MAIN APPLICATION CONTAINER
-        # -------------------------
+
+        # =================================================
+        # SHARED VOLUME FOR CLOUD SQL SOCKET
+        # =================================================
+        volume {
+          name = "cloudsql"
+          empty_dir {}
+        }
+
+        # =================================================
+        # MAIN APP CONTAINER
+        # =================================================
         container {
           name  = "admin-backend"
           image = var.admin_backend_image
@@ -35,12 +44,9 @@ resource "kubernetes_deployment_v1" "admin_backend" {
             container_port = 8080
           }
 
-          # -------------------------------------------------
-          # ECO-MODE: Low Resource Requests (Saves Cost)
-          # -------------------------------------------------
           resources {
             requests = {
-              cpu    = "50m"    # Low reservation
+              cpu    = "50m"
               memory = "128Mi"
             }
             limits = {
@@ -49,7 +55,6 @@ resource "kubernetes_deployment_v1" "admin_backend" {
             }
           }
 
-          # Readiness probe (Internal container check)
           readiness_probe {
             http_get {
               path = "/api"
@@ -59,21 +64,11 @@ resource "kubernetes_deployment_v1" "admin_backend" {
             period_seconds        = 5
           }
 
-          # -------------------------------------------------
-          # ENVIRONMENT VARIABLES (Restored from your old file)
-          # -------------------------------------------------
+          # ================= ENV =================
+
           env {
             name  = "ROOT_PATH"
             value = "/admin-backend"
-          }
-          env {
-            name  = "DB_HOST"
-            value = "127.0.0.1"
-          }
-
-          env {
-            name  = "DB_PORT"
-            value = "5432"
           }
 
           env {
@@ -94,6 +89,12 @@ resource "kubernetes_deployment_v1" "admin_backend" {
                 key  = "password"
               }
             }
+          }
+
+          # IMPORTANT: used by FastAPI DB config
+          env {
+            name  = "INSTANCE_CONNECTION_NAME"
+            value = "${var.project_id}:us-central1:probestack-mysql-nonprod"
           }
 
           env {
@@ -120,17 +121,24 @@ resource "kubernetes_deployment_v1" "admin_backend" {
             name  = "AUTH0_CALLBACK_URI"
             value = "https://dev.probestack.io/callback"
           }
+
+          # Mount socket
+          volume_mount {
+            name       = "cloudsql"
+            mount_path = "/cloudsql"
+          }
         }
 
-        # -------------------------
-        # CLOUD SQL PROXY SIDECAR
-        # -------------------------
+        # =================================================
+        # CLOUD SQL PROXY (FIXED)
+        # =================================================
         container {
           name  = "cloud-sql-proxy"
           image = "gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.8.0"
 
           args = [
-            "--port=5432",
+            "--unix-socket=/cloudsql",
+            "--private-ip",
             "${var.project_id}:us-central1:probestack-mysql-nonprod"
           ]
 
@@ -138,12 +146,16 @@ resource "kubernetes_deployment_v1" "admin_backend" {
             run_as_non_root = true
           }
 
-          # Eco-mode for sidecar as well
           resources {
             requests = {
               cpu    = "10m"
               memory = "64Mi"
             }
+          }
+
+          volume_mount {
+            name       = "cloudsql"
+            mount_path = "/cloudsql"
           }
         }
       }
